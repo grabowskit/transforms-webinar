@@ -1,0 +1,320 @@
+{
+  "@timestamp": {
+    "type": "date"
+  },
+  "access": {
+    "type": "text"
+  },
+  "accommodates": {
+    "type": "long"
+  },
+  "amenities": {
+    "type": "text"
+  },
+  "availability_30": {
+    "type": "long"
+  },
+  "availability_365": {
+    "type": "long"
+  },
+  "availability_60": {
+    "type": "long"
+  },
+  "availability_90": {
+    "type": "long"
+  },
+  "bathrooms": {
+    "type": "double"
+  },
+  "bed_type": {
+    "type": "keyword"
+  },
+  "bedrooms": {
+    "type": "long"
+  },
+  "beds": {
+    "type": "long"
+  },
+  "calculated_host_listings_count": {
+    "type": "long"
+  },
+  "calculated_host_listings_count_entire_homes": {
+    "type": "long"
+  },
+  "calculated_host_listings_count_private_rooms": {
+    "type": "long"
+  },
+  "calculated_host_listings_count_shared_rooms": {
+    "type": "long"
+  },
+  "calendar_last_scraped": {
+    "type": "date",
+    "format": "iso8601"
+  },
+  "calendar_updated": {
+    "type": "keyword"
+  },
+  "cancellation_policy": {
+    "type": "keyword"
+  },
+  "city": {
+    "type": "keyword"
+  },
+  "cleaning_fee": {
+    "type": "double"
+  },
+  "country": {
+    "type": "keyword"
+  },
+  "country_code": {
+    "type": "keyword"
+  },
+  "description": {
+    "type": "text"
+  },
+  "experiences_offered": {
+    "type": "keyword"
+  },
+  "extra_people": {
+    "type": "double"
+  },
+  "first_review": {
+    "type": "date",
+    "format": "iso8601"
+  },
+  "guests_included": {
+    "type": "long"
+  },
+  "has_availability": {
+    "type": "keyword"
+  },
+  "host_about": {
+    "type": "text"
+  },
+  "host_acceptance_rate": {
+    "type": "keyword"
+  },
+  "host_has_profile_pic": {
+    "type": "keyword"
+  },
+  "host_id": {
+    "type": "long"
+  },
+  "host_identity_verified": {
+    "type": "keyword"
+  },
+  "host_is_superhost": {
+    "type": "keyword"
+  },
+  "host_listings_count": {
+    "type": "long"
+  },
+  "host_location": {
+    "type": "text"
+  },
+  "host_name": {
+    "type": "keyword"
+  },
+  "host_neighbourhood": {
+    "type": "keyword"
+  },
+  "host_picture_url": {
+    "type": "keyword"
+  },
+  "host_response_rate": {
+    "type": "keyword"
+  },
+  "host_response_time": {
+    "type": "keyword"
+  },
+  "host_since": {
+    "type": "date",
+    "format": "iso8601"
+  },
+  "host_thumbnail_url": {
+    "type": "keyword"
+  },
+  "host_total_listings_count": {
+    "type": "long"
+  },
+  "host_url": {
+    "type": "keyword"
+  },
+  "host_verifications": {
+    "type": "text"
+  },
+  "house_rules": {
+    "type": "text"
+  },
+  "instant_bookable": {
+    "type": "keyword"
+  },
+  "interaction": {
+    "type": "text"
+  },
+  "is_business_travel_ready": {
+    "type": "keyword"
+  },
+  "is_location_exact": {
+    "type": "keyword"
+  },
+  "jurisdiction_names": {
+    "type": "keyword"
+  },
+  "last_review": {
+    "type": "date",
+    "format": "iso8601"
+  },
+  "last_scraped": {
+    "type": "date",
+    "format": "iso8601"
+  },
+  "latitude": {
+    "type": "double"
+  },
+  "license": {
+    "type": "keyword"
+  },
+  "listing_id": {
+    "type": "keyword"
+  },
+  "listing_url": {
+    "type": "keyword"
+  },
+  "longitude": {
+    "type": "double"
+  },
+  "market": {
+    "type": "keyword"
+  },
+  "maximum_maximum_nights": {
+    "type": "long"
+  },
+  "maximum_minimum_nights": {
+    "type": "long"
+  },
+  "maximum_nights": {
+    "type": "long"
+  },
+  "maximum_nights_avg_ntm": {
+    "type": "double"
+  },
+  "minimum_maximum_nights": {
+    "type": "long"
+  },
+  "minimum_minimum_nights": {
+    "type": "long"
+  },
+  "minimum_nights": {
+    "type": "long"
+  },
+  "minimum_nights_avg_ntm": {
+    "type": "double"
+  },
+  "monthly_price": {
+    "type": "long"
+  },
+  "name": {
+    "type": "text"
+  },
+  "neighborhood_overview": {
+    "type": "text"
+  },
+  "neighbourhood": {
+    "type": "keyword"
+  },
+  "neighbourhood_cleansed": {
+    "type": "keyword"
+  },
+  "notes": {
+    "type": "text"
+  },
+  "number_of_reviews": {
+    "type": "long"
+  },
+  "number_of_reviews_ltm": {
+    "type": "long"
+  },
+  "picture_url": {
+    "type": "keyword"
+  },
+  "price": {
+    "type": "long"
+  },
+  "property_type": {
+    "type": "keyword"
+  },
+  "require_guest_phone_verification": {
+    "type": "keyword"
+  },
+  "require_guest_profile_picture": {
+    "type": "keyword"
+  },
+  "requires_license": {
+    "type": "keyword"
+  },
+  "review_scores_accuracy": {
+    "type": "long"
+  },
+  "review_scores_checkin": {
+    "type": "long"
+  },
+  "review_scores_cleanliness": {
+    "type": "long"
+  },
+  "review_scores_communication": {
+    "type": "long"
+  },
+  "review_scores_location": {
+    "type": "long"
+  },
+  "review_scores_rating": {
+    "type": "long"
+  },
+  "review_scores_value": {
+    "type": "long"
+  },
+  "reviews_per_month": {
+    "type": "double"
+  },
+  "room_type": {
+    "type": "keyword"
+  },
+  "scrape_id": {
+    "type": "date",
+    "format": "yyyyMMddHHmmss"
+  },
+  "security_deposit": {
+    "type": "keyword"
+  },
+  "smart_location": {
+    "type": "keyword"
+  },
+  "space": {
+    "type": "text"
+  },
+  "square_feet": {
+    "type": "long"
+  },
+  "state": {
+    "type": "keyword"
+  },
+  "street": {
+    "type": "text"
+  },
+  "summary": {
+    "type": "text"
+  },
+  "transit": {
+    "type": "text"
+  },
+  "weekly_price": {
+    "type": "long"
+  },
+  "zipcode": {
+    "type": "keyword"
+  },
+  "location_geo": {
+    "type": "geo_point"
+  }
+}
