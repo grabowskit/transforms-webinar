@@ -285,7 +285,7 @@
     "format": "yyyyMMddHHmmss"
   },
   "security_deposit": {
-    "type": "keyword"
+    "type": "long"
   },
   "smart_location": {
     "type": "keyword"
