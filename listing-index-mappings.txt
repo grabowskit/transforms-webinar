@@ -98,7 +98,7 @@
     "type": "keyword"
   },
   "host_id": {
-    "type": "long"
+    "type": "keyword"
   },
   "host_identity_verified": {
     "type": "keyword"
