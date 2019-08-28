@@ -1,0 +1,564 @@
+##########################################
+# AGGREGATIONS
+##########################################
+
+# Clickstream data example
+
+# most frequently visited urls
+GET filebeat-apache2-anon/_search?size=0
+{
+  "aggs": {
+    "most_frequent_url": {
+      "terms": {
+        "field": "apache.access.url",
+        "size": 10
+      }
+    }
+  }
+}
+
+# page_views_per_minute
+GET filebeat-apache2-anon/_search?size=0
+{
+  "aggs": {
+    "all_matching_docs": {
+      "filters": {
+        "filters": {
+          "all": {
+            "match_all": {}
+          }
+        }
+      },
+      "aggs": {
+        "min_time": {
+          "min": {
+            "field": "@timestamp"
+          }
+        },
+        "max_time": {
+          "max": {
+            "field": "@timestamp"
+          }
+        },
+        "page_views_per_minute": {
+          "bucket_script": {
+            "buckets_path": {
+              "min": "min_time",
+              "max": "max_time",
+              "count": "_count"
+            },
+            "script": "60*params.count/((params.max - params.min)/1000)"
+          }
+        }
+      }
+    }
+  }
+}
+
+# sessionid 59e08dae940518ee duration
+GET filebeat-apache2-anon/_search?size=0
+{
+  "query": {
+    "term": {
+      "apache.access.sessionid": {
+        "value": "59e08dae940518ee"
+      }
+    }
+  }, 
+  "aggs": {
+    "all_matching_docs": {
+      "filters": {
+        "filters": {
+          "all": {
+            "match_all": {}
+          }
+        }
+      },
+      "aggs": {
+        "min_time": {
+          "min": {
+            "field": "@timestamp"
+          }
+        },
+        "max_time": {
+          "max": {
+            "field": "@timestamp"
+          }
+        },
+        "sessionid_59e08dae940518ee_duration": {
+          "bucket_script": {
+            "buckets_path": {
+              "min": "min_time",
+              "max": "max_time"
+            },
+            "script": "(params.max - params.min)/1000"
+          }
+        }
+      }
+    }
+  }
+}
+
+# all sessions duration
+GET filebeat-apache2-anon/_search?size=0
+{
+  "aggs": {
+    "sessionid": {
+      "terms": {
+       "field": "apache.access.sessionid",
+       "size": 10
+      },
+      "aggs": {
+        "min_time": {
+          "min": {
+            "field": "@timestamp"
+          }
+        },
+        "max_time": {
+          "max": {
+            "field": "@timestamp"
+          }
+        },
+        "session_duration": {
+          "bucket_script": {
+            "buckets_path": {
+              "min": "min_time",
+              "max": "max_time"
+            },
+            "script": "(params.max - params.min)/1000"
+          }
+        }
+      }
+    },
+    "avg_session_duration": {
+      "avg_bucket": {
+        "buckets_path": "sessionid>session_duration" 
+      }
+    }
+  }
+}
+
+# all sessions duration - composite aggregation
+GET filebeat-apache2-anon/_search?size=0
+{
+  "aggs": {
+    "buckets": {
+      "composite": {
+        "sources": [
+          {
+            "sessionid": {
+              "terms": {
+                "field": "apache.access.sessionid"
+              }
+            }
+          }
+        ]
+      },
+      "aggs": {
+        "min_time": {
+          "min": {
+            "field": "@timestamp"
+          }
+        },
+        "max_time": {
+          "max": {
+            "field": "@timestamp"
+          }
+        },
+        "session_duration": {
+          "bucket_script": {
+            "buckets_path": {
+              "min": "min_time",
+              "max": "max_time"
+            },
+            "script": "(params.max - params.min)/1000"
+          }
+        }
+      }
+    }
+  }
+}
+
+GET filebeat-apache2-anon/_search?size=0
+{
+  "aggs": {
+    "buckets": {
+      "composite": {
+        "after": {
+          "sessionid": "100a6938ea98c05b"
+        },
+        "sources": [
+          {
+            "sessionid": {
+              "terms": {
+                "field": "apache.access.sessionid"
+              }
+            }
+          }
+        ]
+      },
+      "aggs": {
+        "min_time": {
+          "min": {
+            "field": "@timestamp"
+          }
+        },
+        "max_time": {
+          "max": {
+            "field": "@timestamp"
+          }
+        },
+        "session_duration": {
+          "bucket_script": {
+            "buckets_path": {
+              "min": "min_time",
+              "max": "max_time"
+            },
+            "script": "(params.max - params.min)/1000"
+          }
+        }
+      }
+    }
+  }
+}
+
+##########################################
+# TRANSFORMS
+##########################################
+
+
+POST _data_frame/transforms/_preview
+{
+  "source": {
+    "index": [
+      "filebeat-apache2-anon"
+    ]
+  },
+  "pivot": {
+    "group_by": {
+      "apache.access.sessionid": {
+        "terms": {
+          "field": "apache.access.sessionid"
+        }
+      }
+    },
+    "aggregations": {
+      "@timestamp.max": {
+        "max": {
+          "field": "@timestamp"
+        }
+      },
+      "@timestamp.min": {
+        "min": {
+          "field": "@timestamp"
+        }
+      },
+      "apache.access.url.cardinality": {
+        "cardinality": {
+          "field": "apache.access.url"
+        }
+      },
+      "apache.access.url.value_count": {
+        "value_count": {
+          "field": "apache.access.url"
+        }
+      }
+    }
+  }
+}
+
+PUT _data_frame/transforms/sessions
+{
+  "source": {
+    "index": [
+      "filebeat-apache2-anon"
+    ]
+  },
+  "description": "Pivot apache logs to session-centric index",
+  "dest": {
+    "index": "sessions"
+  },
+  "pivot": {
+    "group_by": {
+      "apache.access.sessionid": {
+        "terms": {
+          "field": "apache.access.sessionid"
+        }
+      }
+    },
+    "aggregations": {
+      "@timestamp.max": {
+        "max": {
+          "field": "@timestamp"
+        }
+      },
+      "@timestamp.min": {
+        "min": {
+          "field": "@timestamp"
+        }
+      },
+      "apache.access.url.cardinality": {
+        "cardinality": {
+          "field": "apache.access.url"
+        }
+      },
+      "apache.access.url.value_count": {
+        "value_count": {
+          "field": "apache.access.url"
+        }
+      }
+    }
+  }
+}
+
+POST _data_frame/transforms/_preview
+{
+  "source": {
+    "index": [
+      "filebeat-apache2-anon"
+    ]
+  },
+  "pivot": {
+    "group_by": {
+      "apache.access.sessionid": {
+        "terms": {
+          "field": "apache.access.sessionid"
+        }
+      }
+    },
+    "aggregations": {
+      "@timestamp_max": {
+        "max": {
+          "field": "@timestamp"
+        }
+      },
+      "@timestamp_min": {
+        "min": {
+          "field": "@timestamp"
+        }
+      },
+      "duration": {
+        "bucket_script": {
+          "buckets_path": {
+            "min": "@timestamp_min",
+            "max": "@timestamp_max"
+          },
+          "script": "(params.max - params.min)/1000"
+        }
+      }
+    }
+  }
+}
+
+####################
+# OUTLIERS
+####################
+
+POST _data_frame/transforms/_preview
+{
+  "source": {
+    "index": [
+      "kibana_sample_data_ecommerce"
+    ]
+  },
+  "pivot": {
+    "group_by": {
+      "customer_full_name.keyword": {
+        "terms": {
+          "field": "customer_full_name.keyword"
+        }
+      }
+    },
+    "aggregations": {
+      "products.quantity.sum": {
+        "sum": {
+          "field": "products.quantity"
+        }
+      },
+      "products.taxful_price.sum": {
+        "sum": {
+          "field": "products.taxful_price"
+        }
+      },
+      "order_id.value_count": {
+        "value_count": {
+          "field": "order_id"
+        }
+      }
+    }
+  }
+}
+
+PUT _data_frame/transforms/ecommerce-customer-sales
+{
+  "source": {
+    "index": [
+      "kibana_sample_data_ecommerce"
+    ]
+  },
+  "pivot": {
+    "group_by": {
+      "customer_full_name.keyword": {
+        "terms": {
+          "field": "customer_full_name.keyword"
+        }
+      }
+    },
+    "aggregations": {
+      "products.quantity.sum": {
+        "sum": {
+          "field": "products.quantity"
+        }
+      },
+      "products.taxful_price.sum": {
+        "sum": {
+          "field": "products.taxful_price"
+        }
+      },
+      "order_id.value_count": {
+        "value_count": {
+          "field": "order_id"
+        }
+      }
+    }
+  },
+  "description": "Ecommerce sales by customer",
+  "dest": {
+    "index": "ecommerce-customer-sales"
+  }
+}
+
+PUT _ml/data_frame/analytics/ecomm
+{
+  "source": {
+    "index": "ecommerce-customer-sales"
+  },
+  "dest": {
+    "index": "ecommerce-outliers"
+  },
+  "analysis": {
+    "outlier_detection": {
+    }
+  },
+  "analyzed_fields" : {
+    "includes" : ["products.quantity.sum","products.taxful_price.sum","order_id.value_count"]
+  }
+}
+POST _ml/data_frame/analytics/ecomm/_start
+
+GET _ml/data_frame/analytics/ecomm/_stats
+
+######################
+# JOIN
+######################
+POST _data_frame/transforms/_preview
+{
+  "source": {
+    "index": [
+      "airbnb-reviews-tc",
+      "airbnb-listing-tc",
+      "airbnb-calendar-tc"
+    ]
+  },
+  "pivot": {
+    "group_by": {
+      "listing_id": {
+        "terms": {
+          "field": "listing_id"
+        }
+      }
+    },
+    "aggregations": {
+      "max_price": {
+        "max": {
+          "field": "price"
+        }
+      },
+      "min_price": {
+        "min": {
+          "field": "price"
+        }
+      },
+      "description": {
+        "scripted_metric": {
+          "init_script": "state.description = null",
+          "map_script": "state.description = params._source.description",
+          "combine_script": "return state.description",
+          "reduce_script": "for (d in states) if (d != null) return d"
+        }
+      },
+      "last_review_date": {
+        "scripted_metric": {
+          "init_script": "state.review_times = []",
+          "map_script": """
+            if (doc['_index'].value == 'airbnb-reviews-tc') {
+              state.review_times.add(doc['@timestamp'].value.toInstant().toEpochMilli());
+            }
+          """,
+          "combine_script": "return state.review_times",
+          "reduce_script": "for (t in states) if (t.size() > 0) return Collections.max(t)"
+        }
+      }
+    }
+  }
+}
+
+DELETE airbnb-join
+DELETE _data_frame/transforms/airbnb-join
+
+PUT _data_frame/transforms/airbnb-join
+{
+  "source": {
+    "index": [
+      "airbnb-reviews-tc",
+      "airbnb-listing-tc",
+      "airbnb-calendar-tc"
+    ]
+  },
+  "dest": {
+    "index": "airbnb-join"
+  },
+  "pivot": {
+    "group_by": {
+      "listing_id": {
+        "terms": {
+          "field": "listing_id"
+        }
+      }
+    },
+    "aggregations": {
+      "max_price": {
+        "max": {
+          "field": "price"
+        }
+      },
+      "min_price": {
+        "min": {
+          "field": "price"
+        }
+      },
+      "description": {
+        "scripted_metric": {
+          "init_script": "state.description = null",
+          "map_script": "state.description = params._source.description",
+          "combine_script": "return state.description",
+          "reduce_script": "for (d in states) if (d != null) return d"
+        }
+      },
+      "last_review_date": {
+        "scripted_metric": {
+          "init_script": "state.review_times = []",
+          "map_script": """
+            if (doc['_index'].value == 'airbnb-reviews-tc') {
+              state.review_times.add(doc['@timestamp'].value.toInstant().toEpochMilli());
+            }
+          """,
+          "combine_script": "return state.review_times",
+          "reduce_script": "for (t in states) if (t.size() > 0) return new Date(Collections.max(t))"
+        }
+      }
+    }
+  }
+}
+
+POST _data_frame/transforms/airbnb-join/_start
