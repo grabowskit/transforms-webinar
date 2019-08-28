@@ -1,6 +1,6 @@
 # Console commands
 
-The console commands used in the webinar are available in the console-commands file.  The data sets used are the Kibana sample data, Ecommmerce logs and the airbnb data that is available below, with download and Elasticsearch upload instructions.
+The console commands used in the webinar are available in the [console-commands file](https://github.com/grabowskit/transforms-webinar/blob/master/console-commands).  The data sets used are the Kibana sample data, Ecommmerce logs and the airbnb data that is available below, with download and Elasticsearch upload instructions.
 
 # airbnb data set
 Airbnb listings ingested into Elasticsearch
