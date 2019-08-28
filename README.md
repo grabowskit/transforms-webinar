@@ -2,7 +2,7 @@
 
 The console commands used in the webinar are available in the console-commands file.  The data sets used are the Kibana sample data, Ecommmerce logs and the airbnb data that is available below, with download and Elasticsearch upload instructions.
 
-# airbnb
+# airbnb data set
 Airbnb listings ingested into Elasticsearch
 
 Data downloaded from http://insideairbnb.com/get-the-data.html
