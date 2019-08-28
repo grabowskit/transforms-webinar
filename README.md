@@ -13,6 +13,14 @@ The CSV files can be imported using [Elasticsearch file upload feature](https://
 ## When uploading files use advanced settings to change mappnigs and Ingest pipeline
 
 During the listing upload I needed to use the 'override settings' and select "Has header row" for the file upload to work correctly.
+
 To get the location_geo field I created the field by appending Latitude and Longitude fields originally in the Listing.csv via the Ingest Pipeline.  
+
 The default for numeric fields for file upload is to make them long or double types, so I had to covert several of them to keyword.  
+
 I also wanted to have listing_id as a common field across all three indexes (listings, calendar, and reviews), so I needed to change the 'id' field in listings to 'listing_id' during file upload and make sure 'listing_id' was used as a keyword when uploading each of the three files.
+
+
+## Including the vega json config for visualizing Ecommerce outlier detection
+
+I have included the vega configuration so it can be copy and pasted to view Ecommerce outlier detection. Just make sure the naming of the fields are adjusted.
