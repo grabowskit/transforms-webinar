@@ -10,9 +10,11 @@ Data downloaded from http://insideairbnb.com/get-the-data.html
 ## Convert price fields to numerics for better import
 The CSV files can be imported using [Elasticsearch file upload feature](https://www.elastic.co/blog/importing-csv-and-log-data-into-elasticsearch-with-file-data-visualizer).  The price fields were getting imported as keyword strings, so I needed to remove the dollar sign and commas from the those fields. To remove the fields I used the awk and sed commands listed below from my OSX terminal command line. 
 
+```
 \# cat listings.csv|awk -F'"' -v OFS="\"" '{for(i=1;i<=NF;i++)if($i~/^\$[0-9.,]+$/)gsub(/[$,]/,"",$i)}1' > new-listings.csv
 
 \# sed -i '' 's/\\$//g' new-listings.csv
+```
 
 ## When uploading files use advanced settings to change mappnigs and Ingest pipeline
 
