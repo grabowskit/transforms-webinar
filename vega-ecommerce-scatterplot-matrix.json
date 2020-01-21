@@ -1,0 +1,52 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "description": "Scatterplot matrix showing customer ecommerce data",
+    "repeat": {
+    "row": [
+      "_source.products.taxful_price.avg",
+      "_source.products.taxful_price.sum",
+      "_source.products.quantity.avg",
+      "_source.products.quantity.sum",
+      "_source.products.quantity.cardinality"
+    ],
+    "column": [
+      "_source.products.quantity.cardinality",
+      "_source.products.quantity.sum",
+      "_source.products.quantity.avg",
+      "_source.products.taxful_price.sum",
+      "_source.products.taxful_price.avg"
+    ]
+  },
+  "spec": {
+    "width": 140,
+    "height": 140,
+    "data": {
+      "url": {
+        "index": "customer_outliers",
+        "body": {
+          "size": 10000,
+          "query": {
+            "match_all": {}
+          }
+        }
+      },
+      "format": {"property": "hits.hits"}
+    },
+    "mark": {"type": "point"},
+    "encoding": {
+      "x": { "field": { "repeat": "column"}, "type": "quantitative", "scale": { "zero": false} },
+      "y": { "field": { "repeat": "row"}, "type": "quantitative", "scale": { "zero": false} },
+      "color": {
+        "field": "_source.ml.outlier_score",
+        "type": "quantitative",
+        "scale": { "range": ["#aaa", "#aaa", "#aaa", "red"]}
+      },
+      "size": {
+        "field": "_source.ml.outlier_score",
+        "type": "quantitative",
+        "scale": { "range": [2, 16] }
+      },
+      "tooltip": {"field": "_source.customer", "type": "nominal"}
+    }
+  }
+}
