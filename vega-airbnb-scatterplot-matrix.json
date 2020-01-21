@@ -1,0 +1,49 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "description": "Scatterplot matrix showing customer ecommerce data",
+   "repeat": {
+    "row": [
+      "_source.min_price",
+      "_source.max_price",
+      "_source.number_of_reviewers",
+      "_source.rating"
+    ],
+    "column": [
+      "_source.rating",
+      "_source.number_of_reviewers",
+      "_source.max_price",
+      "_source.min_price"
+    ]
+  },
+  "spec": {
+    "width": 200,
+    "height": 200,
+    "data": {
+      "url": {
+        "index": "airbnb-outliers",
+        "body": {
+          "size": 10000,
+          "query": {
+            "match_all": {}
+          }
+        }
+      },
+      "format": {"property": "hits.hits"}
+    },
+    "mark": {"type": "point"},
+    "encoding": {
+      "x": { "field": { "repeat": "column"}, "type": "quantitative", "scale": {"zero": false} },
+      "y": { "field": { "repeat": "row"}, "type": "quantitative", "scale": {"zero": false} },
+      "color": {
+        "field": "_source.ml.outlier_score",
+        "type": "quantitative",
+      "scale": { "range": ["#aaa", "#aaa", "#aaa", "red"]}
+    },
+    "size": {
+      "field": "_source.ml.outlier_score",
+      "type": "quantitative",
+      "scale": { "range": [2, 16] }
+    },
+    "tooltip": {"field": "_source.customer", "type": "nominal"}
+  }}
+}
